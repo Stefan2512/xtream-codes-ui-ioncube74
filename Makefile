@@ -1,5 +1,5 @@
 VERSION := v1.0
-BUILD_NUMBER := $(shell date +%Y%m%d%H%M)
+BUILD_NUMBER := $(shell date +%Y%m%d%H%M%S)
 SOURCE_DIR := /home/xtreamcodes/iptv_xtream_codes
 RELEASE_DIR := ./releases
 TEMP_DIR := ./temp

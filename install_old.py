@@ -6,7 +6,6 @@ from itertools import cycle
 from zipfile import ZipFile
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-from datetime import datetime
 
 # Updated URLs for Stefan's repository
 rDownloadURL = {
@@ -543,19 +542,25 @@ key_buffer_size = 16M
     import time
     time.sleep(8)
     
-    # Fix MariaDB authentication first
-    printc("Configuring MariaDB authentication")
-    os.system('mysql -u root -e "ALTER USER \'root\'@\'localhost\' IDENTIFIED BY \'\';" > /dev/null 2>&1')
-    os.system('mysql -u root -e "FLUSH PRIVILEGES;" > /dev/null 2>&1')
-    
-    # Try to connect with root user on port 7999
+    # Try to connect with root user (try both sudo and direct methods on port 7999)
     printc("Testing MySQL connection on port 7999")
     
-    # Test connection
-    test_result = os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "SELECT 1;" > /dev/null 2>&1')
-    if test_result != 0:
-        printc("Failed to connect to MySQL on port 7999!", col.BRIGHT_RED)
-        return False
+    # First try: sudo mysql on port 7999
+    test_sudo = os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "SELECT 1;" > /dev/null 2>&1')
+    if test_sudo == 0:
+        printc("Using sudo authentication for MySQL")
+        mysql_cmd_prefix = "sudo mysql -u root -P 7999 -h 127.0.0.1"
+        use_sudo = True
+    else:
+        # Second try: direct mysql with empty password on port 7999
+        test_direct = os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "SELECT 1;" > /dev/null 2>&1')
+        if test_direct == 0:
+            printc("Using direct authentication for MySQL")
+            mysql_cmd_prefix = "mysql -u root -P 7999 -h 127.0.0.1"
+            use_sudo = False
+        else:
+            printc("Failed to connect to MySQL on port 7999!", col.BRIGHT_RED)
+            return False
     
     # Verify database.sql exists
     if not os.path.exists("/home/xtreamcodes/iptv_xtream_codes/database.sql"):
@@ -565,14 +570,28 @@ key_buffer_size = 16M
     printc("Creating database and user")
     
     # Create database
-    result = os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "DROP DATABASE IF EXISTS xtream_iptvpro; CREATE DATABASE IF NOT EXISTS xtream_iptvpro;" > /dev/null 2>&1')
+    if use_sudo:
+        result = os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "DROP DATABASE IF EXISTS xtream_iptvpro; CREATE DATABASE IF NOT EXISTS xtream_iptvpro;" > /dev/null 2>&1')
+    else:
+        result = os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "DROP DATABASE IF EXISTS xtream_iptvpro; CREATE DATABASE IF NOT EXISTS xtream_iptvpro;" > /dev/null 2>&1')
+        
     if result != 0:
         printc("Failed to create database!", col.BRIGHT_RED)
         return False
     
+    # Drop user if exists (ignore errors)
+    if use_sudo:
+        os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "DROP USER IF EXISTS \'%s\'@\'%%\';" > /dev/null 2>&1' % rUsername)
+    else:
+        os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "DROP USER IF EXISTS \'%s\'@\'%%\';" > /dev/null 2>&1' % rUsername)
+    
     printc("Importing database schema")
     # Import database schema
-    result = os.system("mysql -u root -P 7999 -h 127.0.0.1 xtream_iptvpro < /home/xtreamcodes/iptv_xtream_codes/database.sql > /dev/null 2>&1")
+    if use_sudo:
+        result = os.system("sudo mysql -u root -P 7999 -h 127.0.0.1 xtream_iptvpro < /home/xtreamcodes/iptv_xtream_codes/database.sql > /dev/null 2>&1")
+    else:
+        result = os.system("mysql -u root -P 7999 -h 127.0.0.1 xtream_iptvpro < /home/xtreamcodes/iptv_xtream_codes/database.sql > /dev/null 2>&1")
+        
     if result != 0:
         printc("Failed to import database schema!", col.BRIGHT_RED)
         return False
@@ -580,34 +599,48 @@ key_buffer_size = 16M
     printc("Configuring database settings")
     # Update settings
     settings_sql = 'USE xtream_iptvpro; UPDATE settings SET live_streaming_pass = \'%s\', unique_id = \'%s\', crypt_load_balancing = \'%s\';' % (generate(20), generate(10), generate(20))
-    os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % settings_sql)
+    
+    if use_sudo:
+        os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % settings_sql)
+    else:
+        os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % settings_sql)
     
     # Insert server configuration
     server_sql = 'USE xtream_iptvpro; REPLACE INTO streaming_servers (id, server_name, domain_name, server_ip, vpn_ip, ssh_password, ssh_port, diff_time_main, http_broadcast_port, total_clients, system_os, network_interface, latency, status, enable_geoip, geoip_countries, last_check_ago, can_delete, server_hardware, total_services, persistent_connections, rtmp_port, geoip_type, isp_names, isp_type, enable_isp, boost_fpm, http_ports_add, network_guaranteed_speed, https_broadcast_port, https_ports_add, whitelist_ips, watchdog_data, timeshift_only) VALUES (1, \'Main Server\', \'\', \'%s\', \'\', NULL, NULL, 0, 25461, 1000, \'%s\', \'eth0\', 0, 1, 0, \'\', 0, 0, \'{}\', 3, 0, 25462, \'low_priority\', \'\', \'low_priority\', 0, 1, \'\', 1000, 25463, \'\', \'[\"127.0.0.1\",\"\"]\', \'{}\', 0);' % (getIP(), getVersion())
-    os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % server_sql)
+    
+    if use_sudo:
+        os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % server_sql)
+    else:
+        os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % server_sql)
     
     # Create admin user with ALL required fields
     admin_sql = 'USE xtream_iptvpro; INSERT INTO reg_users (id, username, password, email, member_group_id, verified, status, date_registered, default_lang, reseller_dns, google_2fa_sec) VALUES (1, \'admin\', \'\$6\$rounds=20000\$xtreamcodes\$XThC5OwfuS0YwS4ahiifzF14vkGbGsFF1w7ETL4sRRC5sOrAWCjWvQJDromZUQoQuwbAXAFdX3h3Cp3vqulpS0\', \'admin@website.com\', 1, 1, 1, UNIX_TIMESTAMP(), \'English\', \'\', \'\') ON DUPLICATE KEY UPDATE password=\'\$6\$rounds=20000\$xtreamcodes\$XThC5OwfuS0YwS4ahiifzF14vkGbGsFF1w7ETL4sRRC5sOrAWCjWvQJDromZUQoQuwbAXAFdX3h3Cp3vqulpS0\';'
-    os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % admin_sql)
+    
+    if use_sudo:
+        os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % admin_sql)
+    else:
+        os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % admin_sql)
     
     printc("Creating MySQL user for Xtream Codes")
-    # Drop existing users first
-    os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "DROP USER IF EXISTS \'%s\'@\'localhost\'; DROP USER IF EXISTS \'%s\'@\'127.0.0.1\'; DROP USER IF EXISTS \'%s\'@\'%%\';" > /dev/null 2>&1' % (rUsername, rUsername, rUsername))
+    # Create database user
+    user_sql = 'CREATE USER \'%s\'@\'%%\' IDENTIFIED BY \'%s\'; GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO \'%s\'@\'%%\' WITH GRANT OPTION; GRANT SELECT, LOCK TABLES ON *.* TO \'%s\'@\'%%\';FLUSH PRIVILEGES;' % (rUsername, rPassword, rUsername, rUsername)
     
-    # Create database user for all possible hosts
-    user_creation_sql = 'CREATE USER \'%s\'@\'localhost\' IDENTIFIED BY \'%s\'; CREATE USER \'%s\'@\'127.0.0.1\' IDENTIFIED BY \'%s\'; CREATE USER \'%s\'@\'%%\' IDENTIFIED BY \'%s\';' % (rUsername, rPassword, rUsername, rPassword, rUsername, rPassword)
-    result = os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % user_creation_sql)
+    if use_sudo:
+        result = os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % user_sql)
+    else:
+        result = os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % user_sql)
+        
     if result != 0:
         printc("Failed to create database user!", col.BRIGHT_RED)
         return False
     
-    # Grant privileges to all hosts
-    grant_sql = 'GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO \'%s\'@\'localhost\' WITH GRANT OPTION; GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO \'%s\'@\'127.0.0.1\' WITH GRANT OPTION; GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO \'%s\'@\'%%\' WITH GRANT OPTION; GRANT SELECT, LOCK TABLES ON *.* TO \'%s\'@\'localhost\'; GRANT SELECT, LOCK TABLES ON *.* TO \'%s\'@\'127.0.0.1\'; GRANT SELECT, LOCK TABLES ON *.* TO \'%s\'@\'%%\'; FLUSH PRIVILEGES;' % (rUsername, rUsername, rUsername, rUsername, rUsername, rUsername)
-    os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % grant_sql)
-    
     # Create dashboard statistics table
     stats_sql = 'USE xtream_iptvpro; CREATE TABLE IF NOT EXISTS dashboard_statistics (id int(11) NOT NULL AUTO_INCREMENT, type varchar(16) NOT NULL DEFAULT \'\', time int(16) NOT NULL DEFAULT \'0\', count int(16) NOT NULL DEFAULT \'0\', PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=latin1; INSERT INTO dashboard_statistics (type, time, count) VALUES(\'conns\', UNIX_TIMESTAMP(), 0),(\'users\', UNIX_TIMESTAMP(), 0);'
-    os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % stats_sql)
+    
+    if use_sudo:
+        os.system('sudo mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % stats_sql)
+    else:
+        os.system('mysql -u root -P 7999 -h 127.0.0.1 -e "%s" > /dev/null 2>&1' % stats_sql)
     
     # Test the created user
     printc("Testing database connection with new user")
@@ -682,6 +715,8 @@ def configure():
     for log_file in log_files:
         if not os.path.exists(log_file):
             open(log_file, 'a').close()
+    
+    # REMOVED: nginx_rtmp creation - not needed anymore
     
     # Configure fstab for tmpfs
     fstab_content = open("/etc/fstab").read()
