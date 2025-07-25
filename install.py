@@ -438,7 +438,8 @@ def prepare(rType="MAIN"):
         printc("Installing %s" % rPackage)
         os.system("apt-get install %s -y > /dev/null" % rPackage)
     printc("Installing pip2 and python2 paramiko")
-    os.system("add-apt-repository universe > /dev/null 2>&1 && curl https://github.com/sabiralipsl/Xtream-UI-R22F-ubuntu20.04lts-2025/releases/download/xtream1/get-pip.py --output get-pip.py > /dev/null 2>&1 && python2 get-pip.py > /dev/null 2>&1 && pip2 install paramiko > /dev/null 2>&1")
+    
+    os.system("add-apt-repository universe > /dev/null 2>&1 && curl https://raw.githubusercontent.com/Stefan2512/xtream-codes-ui-ioncube74/master/files/get-pip.py --output get-pip.py > /dev/null 2>&1 && python2 get-pip.py > /dev/null 2>&1 && pip2 install paramiko > /dev/null 2>&1")    
     os.system("apt-get install -f > /dev/null")
     try:
         subprocess.check_output("getent passwd xtreamcodes > /dev/null".split())
@@ -712,11 +713,12 @@ def configure():
     # Download missing files
     if not os.path.exists("/home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb"): 
         printc("Downloading GeoLite2 database")
-        os.system("wget -q https://github.com/sabiralipsl/Xtream-UI-R22F-ubuntu20.04lts-2025/releases/download/xtream1/GeoLite2.mmdb -O /home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb")
+        os.system("wget -q https://raw.githubusercontent.com/Stefan2512/xtream-codes-ui-ioncube74/master/files/GeoLite2.mmdb -O /home/xtreamcodes/iptv_xtream_codes/GeoLite2.mmdb")
     
     if not os.path.exists("/home/xtreamcodes/iptv_xtream_codes/crons/pid_monitor.php"): 
         printc("Downloading PID monitor")
-        os.system("wget -q https://github.com/sabiralipsl/Xtream-UI-R22F-ubuntu20.04lts-2025/releases/download/xtream1/pid_monitor.php -O /home/xtreamcodes/iptv_xtream_codes/crons/pid_monitor.php")
+        
+        os.system("wget -q https://raw.githubusercontent.com/Stefan2512/xtream-codes-ui-ioncube74/master/files/pid_monitor.php -O /home/xtreamcodes/iptv_xtream_codes/crons/pid_monitor.php")
     
     # Set ownership and permissions
     printc("Setting permissions and ownership")
