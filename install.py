@@ -7,16 +7,16 @@ from zipfile import ZipFile
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
-# TODO: Update these URLs after uploading archives to your server
+# Updated URLs for Stefan's repository
 rDownloadURL = {
-    "main": "https://github.com/your-repo/releases/download/v1.0/xtream-codes-ui-main-ioncube74.zip", 
-    "sub": "https://github.com/your-repo/releases/download/v1.0/xtream-codes-ui-loadbalancer-ioncube74.zip"
+    "main": "https://github.com/Stefan2512/xtream-codes-ui-ioncube74/releases/download/v1.0/xtream-codes-ui-main-ioncube74.zip", 
+    "sub": "https://github.com/Stefan2512/xtream-codes-ui-ioncube74/releases/download/v1.0/xtream-codes-ui-loadbalancer-ioncube74.zip"
 }
 
 rPackages = ["libcurl4", "libxslt1-dev", "libgeoip-dev", "libonig-dev", "e2fsprogs", "wget", "mcrypt", "nscd", "htop", "zip", "unzip", "mc", "mariadb-server", "libpng16-16", "libzip5", "python3-paramiko", "python-is-python3"]
 rInstall = {"MAIN": "main", "LB": "sub"}
 rUpdate = {"UPDATE": "update"}
-rMySQLCnf = base64.b64decode("IyBYdHJlYW0gQ29kZXMKCltjbGllbnRdCnBvcnQgICAgICAgICAgICA9IDMzMDYKCltteXNxbGRfc2FmZV0KbmljZSAgICAgICAgICAgID0gMAoKW215c3FsZF0KdXNlciAgICAgICAgICAgID0gbXlzcWwKcG9ydCAgICAgICAgICAgID0gNzk5OQpiYXNlZGlyICAgICAgICAgPSAvdXNyCmRhdGFkaXIgICAgICAgICA9IC92YXIvbGliL215c3FsCnRtcGRpciAgICAgICAgICA9IC90bXAKbGMtbWVzc2FnZXMtZGlyID0gL3Vzci9zaGFyZS9teXNxbApza2lwLWV4dGVybmFsLWxvY2tpbmcKc2tpcC1uYW1lLXJlc29sdmU9MQoKYmluZC1hZGRyZXNzICAgICAgICAgICAgPSAqCmtleV9idWZmZXJfc2l6ZSA9IDEyOE0KCm15aXNhbV9zb3J0X2J1ZmZlcl9zaXplID0gNE0KbWF4X2FsbG93ZWRfcGFja2V0ICAgICAgPSA2NE0KbXlpc2FtLXJlY292ZXItb3B0aW9ucyA9IEJBQ0tVUAptYXhfbGVuZ3RoX2Zvcl9zb3J0X2RhdGEgPSA4MTkyCnF1ZXJ5X2NhY2hlX2xpbWl0ICAgICAgID0gNE0KcXVlcnlfY2FjaGVfc2l6ZSAgICAgICAgPSAwCnF1ZXJ5X2NhY2hlX3R5cGUJPSAwCgpleHBpcmVfbG9nc19kYXlzICAgICAgICA9IDEwCm1heF9iaW5sb2dfc2l6ZSAgICAgICAgID0gMTAwTQoKbWF4X2Nvbm5lY3Rpb25zICA9IDIwMDAgI3JlY29tbWVuZGVkIGZvciAxNkdCIHJhbSAKYmFja19sb2cgPSA0MDk2Cm9wZW5fZmlsZXNfbGltaXQgPSAxNjM4NAppbm5vZGJfb3Blbl9maWxlcyA9IDE2Mzg0Cm1heF9jb25uZWN0X2Vycm9ycyA9IDMwNzIKdGFibGVfb3Blbl9jYWNoZSA9IDQwOTYKdGFibGVfZGVmaW5pdGlvbl9jYWNoZSA9IDQwOTYKCgp0bXBfdGFibGVfc2l6ZSA9IDFHCm1heF9oZWFwX3RhYmxlX3NpemUgPSAxRwoKaW5ub2RiX2J1ZmZlcl9wb29sX3NpemUgPSAxMkcgI3JlY29tbWVuZGVkIGZvciAxNkdCIHJhbSAKaW5ub2RiX2J1ZmZlcl9wb29sX2luc3RhbmNlcyA9IDEKaW5ub2RiX3JlYWRfaW9fdGhyZWFkcyA9IDY0Cmlubm9kYl93cml0ZV9pb190aHJlYWRzID0gNjQKaW5ub2RiX3RocmVhZF9jb25jdXJyZW5jeSA9IDAKaW5ub2RiX2ZsdXNoX2xvZ19hdF90cnhfY29tbWl0ID0gMAogaW5ub2RiX2ZsdXNoX21ldGhvZCA9IE9fRElSRUNUCnBlcmZvcm1hbmNlX3NjaGVtYSA9IE9OCmlubm9kYi1maWxlLXBlci10YWJsZSA9IDEKaW5ub2RiX2lvX2NhcGFjaXR5PTIwMDAwCmlubm9kYl90YWJsZV9sb2NrcyA9IDAKaW5ub2RiX2xvY2tfd2FpdF90aW1lb3V0ID0gMAogaW5ub2RiX2RlYWRsb2NrX2RldGVjdCA9IDAKaW5ub2RiX2xvZ19maWxlX3NpemUgPSA1MTJNC gpzcWwtbW9kZT0iTk9fRU5HSU5FX1NVQlNUSVRVVElPTiIKCltteXNxbGR1bXBdCnF1aWNrCnF1b3RlLW5hbWVzCm1heF9hbGxvd2VkX3BhY2tldCAgICAgID0gMTZNCgpbbXlzcWxdCgpbaXNhbWNoa10Ka2V5X2J1ZmZlcl9zaXplICAgICAgICAgICAgICA9IDE2TQo=")
+rMySQLCnf = base64.b64decode("IyBYdHJlYW0gQ29kZXMKCltjbGllbnRdCnBvcnQgICAgICAgICAgICA9IDMzMDYKCltteXNxbGRfc2FmZV0KbmljZSAgICAgICAgICAgID0gMAoKW215c3FsZF0KdXNlciAgICAgICAgICAgID0gbXlzcWwKcG9ydCAgICAgICAgICAgID0gNzk5OQpiYXNlZGlyICAgICAgICAgPSAvdXNyCmRhdGFkaXIgICAgICAgICA9IC92YXIvbGliL215c3FsCnRtcGRpciAgICAgICAgICA9IC90bXAKbGMtbWVzc2FnZXMtZGlyID0gL3Vzci9zaGFyZS9teXNxbApza2lwLWV4dGVybmFsLWxvY2tpbmcKc2tpcC1uYW1lLXJlc29sdmU9MQoKYmluZC1hZGRyZXNzICAgICAgICAgICAgPSAqCmtleV9idWZmZXJfc2l6ZSA9IDEyOE0KCm15aXNhbV9zb3J0X2J1ZmZlcl9zaXplID0gNE0KbWF4X2FsbG93ZWRfcGFja2V0ICAgICAgPSA2NE0KbXlpc2FtLXJlY292ZXItb3B0aW9ucyA9IEJBQ0tVUAptYXhfbGVuZ3RoX2Zvcl9zb3J0X2RhdGEgPSA4MTkyCnF1ZXJ5X2NhY2hlX2xpbWl0ICAgICAgID0gNE0KcXVlcnlfY2FjaGVfc2l6ZSAgICAgICAgPSAwCnF1ZXJ5X2NhY2hlX3R5cGUJPSAwCgpleHBpcmVfbG9nc19kYXlzICAgICAgICA9IDEwCm1heF9iaW5sb2dfc2l6ZSAgICAgICAgID0gMTAwTQoKbWF4X2Nvbm5lY3Rpb25zICA9IDIwMDAgI3JlY29tbWVuZGVkIGZvciAxNkdCIHJhbSAKYmFja19sb2cgPSA0MDk2Cm9wZW5fZmlsZXNfbGltaXQgPSAxNjM4NAppbm5vZGJfb3Blbl9maWxlcyA9IDE2Mzg0Cm1heF9jb25uZWN0X2Vycm9ycyA9IDMwNzIKdGFibGVfb3Blbl9jYWNoZSA9IDQwOTYKdGFibGVfZGVmaW5pdGlvbl9jYWNoZSA9IDQwOTYKCgp0bXBfdGFibGVfc2l6ZSA9IDFHCm1heF9oZWFwX3RhYmxlX3NpemUgPSAxRwoKaW5ub2RiX2J1ZmZlcl9wb29sX3NpemUgPSAxMkcgI3JlY29tbWVuZGVkIGZvciAxNkdCIHJhbSAKaW5ub2RiX2J1ZmZlcl9wb29sX2luc3RhbmNlcyA9IDEKaW5ub2RiX3JlYWRfaW9fdGhyZWFkcyA9IDY0Cmlubm9kYl93cml0ZV9pb190aHJlYWRzID0gNjQKaW5ub2RiX3RocmVhZF9jb25jdXJyZW5jeSA9IDAKaW5ub2RiX2ZsdXNoX2xvZ19hdF90cnhfY29tbWl0ID0gMAogaW5ub2RiX2ZsdXNoX21ldGhvZCA9IE9fRElSRUNUCnBlcmZvcm1hbmNlX3NjaGVtYSA9IE9OCmlubm9kYi1maWxlLXBlci10YWJsZSA9IDEKaW5ub2RiX2lvX2NhcGFjaXR5PTIwMDAwCmlubm9kYl90YWJsZV9sb2NrcyA9IDAKaW5ub2RiX2xvY2tfd2FpdF90aW1lb3V0ID0gMAogaW5ub2RiX2RlYWRsb2NrX2RldGVjdCA9IDAKaW5ub2RiX2xvZ19maWxlX3NpemUgPSA1MTJNC jpzcWwtbW9kZT0iTk9fRU5HSU5FX1NVQlNUSVRVVElPTiIKCltteXNxbGR1bXBdCnF1aWNrCnF1b3RlLW5hbWVzCm1heF9hbGxvd2VkX3BhY2tldCAgICAgID0gMTZNCgpbbXlzcWxdCgpbaXNhbWNoa10Ka2V5X2J1ZmZlcl9zaXplICAgICAgICAgICAgICA9IDE2TQo=")
 
 rVersions = {
     "20.04": "focal"
@@ -110,6 +110,17 @@ def install(rType="MAIN"):
         os.system('unzip "/tmp/xtreamcodes.zip" -d "/home/xtreamcodes/" > /dev/null')
         try: os.remove("/tmp/xtreamcodes.zip")
         except: pass
+        
+        # Download database.sql for MAIN server installation
+        if rType == "MAIN":
+            printc("Downloading Database Schema")
+            rDatabaseURL = "https://raw.githubusercontent.com/Stefan2512/xtream-codes-ui-ioncube74/main/database.sql"
+            os.system('wget -q -O "/home/xtreamcodes/iptv_xtream_codes/database.sql" "%s"' % rDatabaseURL)
+            if not os.path.exists("/home/xtreamcodes/iptv_xtream_codes/database.sql"):
+                printc("Failed to download database schema!", col.BRIGHT_RED)
+                return False
+            printc("Database schema downloaded successfully")
+        
         return True
     printc("Failed to download installation file!", col.BRIGHT_RED)
     return False
@@ -117,9 +128,9 @@ def install(rType="MAIN"):
 def update(rType="MAIN"):
     if rType == "UPDATE":
         printc("Enter the link of release_xyz.zip file:", col.BRIGHT_RED)
-        rlink = input('Example: https://github.com/your-repo/releases/download/v1.0/release_22f.zip\n\nNow enter the link:\n\n')
+        rlink = input('Example: https://github.com/Stefan2512/xtream-codes-ui-ioncube74/releases/download/v1.0/release_22f.zip\n\nNow enter the link:\n\n')
     else:
-        rlink = "https://github.com/your-repo/releases/download/v1.0/release_22f.zip"
+        rlink = "https://github.com/Stefan2512/xtream-codes-ui-ioncube74/releases/download/v1.0/release_22f.zip"
         printc("Downloading Software Update")  
     os.system('wget -q -O "/tmp/update.zip" "%s"' % rlink)
     if os.path.exists("/tmp/update.zip"):
@@ -158,26 +169,108 @@ def mysql(rUsername, rPassword):
         rFile.write(rMySQLCnf)
         rFile.close()
         os.system("systemctl restart mariadb > /dev/null")
-    for i in range(5):
-        rMySQLRoot = ""
-        print(" ")
-        if len(rMySQLRoot) > 0: rExtra = " -p%s" % rMySQLRoot
-        else: rExtra = ""
-        rDrop = True
+    
+    # Wait for MariaDB to fully start
+    printc("Waiting for MariaDB to start...")
+    import time
+    time.sleep(5)
+    
+    # Try to connect with empty root password first, then ask for password if needed
+    for attempt in range(3):
+        if attempt == 0:
+            rMySQLRoot = ""
+            print("Trying to connect to MySQL with empty root password...")
+        else:
+            print("Previous attempt failed. Please enter MySQL root password (or press Enter if empty):")
+            rMySQLRoot = input("MySQL Root Password: ").strip()
+        
+        if len(rMySQLRoot) > 0: 
+            rExtra = " -p%s" % rMySQLRoot
+        else: 
+            rExtra = ""
+        
         try:
-            if rDrop:
-                os.system('mysql -u root%s -e "DROP DATABASE IF EXISTS xtream_iptvpro; CREATE DATABASE IF NOT EXISTS xtream_iptvpro;" > /dev/null' % rExtra)
-                os.system('mysql -u root%s -e "USE xtream_iptvpro; DROP USER IF EXISTS \'%s\'@\'%%\';" > /dev/null' % (rExtra, rUsername))
-                os.system("mysql -u root%s xtream_iptvpro < /home/xtreamcodes/iptv_xtream_codes/database.sql > /dev/null" % rExtra)
-                os.system('mysql -u root%s -e "USE xtream_iptvpro; UPDATE settings SET live_streaming_pass = \'%s\', unique_id = \'%s\', crypt_load_balancing = \'%s\';" > /dev/null' % (rExtra, generate(20), generate(10), generate(20)))
-                os.system('mysql -u root%s -e "USE xtream_iptvpro; REPLACE INTO streaming_servers (id, server_name, domain_name, server_ip, vpn_ip, ssh_password, ssh_port, diff_time_main, http_broadcast_port, total_clients, system_os, network_interface, latency, status, enable_geoip, geoip_countries, last_check_ago, can_delete, server_hardware, total_services, persistent_connections, rtmp_port, geoip_type, isp_names, isp_type, enable_isp, boost_fpm, http_ports_add, network_guaranteed_speed, https_broadcast_port, https_ports_add, whitelist_ips, watchdog_data, timeshift_only) VALUES (1, \'Main Server\', \'\', \'%s\', \'\', NULL, NULL, 0, 25461, 1000, \'%s\', \'eth0\', 0, 1, 0, \'\', 0, 0, \'{}\', 3, 0, 25462, \'low_priority\', \'\', \'low_priority\', 0, 1, \'\', 1000, 25463, \'\', \'[\"127.0.0.1\",\"\"]\', \'{}\', 0);" > /dev/null' % (rExtra, getIP(), getVersion()))
-                os.system('mysql -u root%s -e "USE xtream_iptvpro; REPLACE INTO reg_users (id, username, password, email, member_group_id, verified, status) VALUES (1, \'admin\', \'\$6\$rounds=20000\$xtreamcodes\$XThC5OwfuS0YwS4ahiifzF14vkGbGsFF1w7ETL4sRRC5sOrAWCjWvQJDromZUQoQuwbAXAFdX3h3Cp3vqulpS0\', \'admin@website.com\', 1, 1, 1);" > /dev/null'  % rExtra)
-                os.system('mysql -u root%s -e "CREATE USER \'%s\'@\'%%\' IDENTIFIED BY \'%s\'; GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO \'%s\'@\'%%\' WITH GRANT OPTION; GRANT SELECT, LOCK TABLES ON *.* TO \'%s\'@\'%%\';FLUSH PRIVILEGES;" > /dev/null' % (rExtra, rUsername, rPassword, rUsername, rUsername))
-                os.system('mysql -u root%s -e "USE xtream_iptvpro; CREATE TABLE IF NOT EXISTS dashboard_statistics (id int(11) NOT NULL AUTO_INCREMENT, type varchar(16) NOT NULL DEFAULT \'\', time int(16) NOT NULL DEFAULT \'0\', count int(16) NOT NULL DEFAULT \'0\', PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=latin1; INSERT INTO dashboard_statistics (type, time, count) VALUES(\'conns\', UNIX_TIMESTAMP(), 0),(\'users\', UNIX_TIMESTAMP(), 0);\" > /dev/null' % rExtra)
-            try: os.remove("/home/xtreamcodes/iptv_xtream_codes/database.sql")
-            except: pass
+            print("Testing MySQL connection...")
+            test_result = os.system('mysql -u root%s -e "SELECT 1;" > /dev/null 2>&1' % rExtra)
+            if test_result != 0:
+                if attempt < 2:
+                    printc("Failed to connect to MySQL. Trying again...", col.BRIGHT_YELLOW)
+                    continue
+                else:
+                    printc("Failed to connect to MySQL after 3 attempts!", col.BRIGHT_RED)
+                    return False
+            
+            printc("Connected to MySQL successfully")
+            
+            # Verify database.sql exists
+            if not os.path.exists("/home/xtreamcodes/iptv_xtream_codes/database.sql"):
+                printc("Database schema file not found!", col.BRIGHT_RED)
+                return False
+            
+            printc("Creating database and user")
+            
+            # Drop and create database
+            result = os.system('mysql -u root%s -e "DROP DATABASE IF EXISTS xtream_iptvpro; CREATE DATABASE IF NOT EXISTS xtream_iptvpro;" > /dev/null 2>&1' % rExtra)
+            if result != 0:
+                printc("Failed to create database!", col.BRIGHT_RED)
+                continue
+                
+            # Drop user if exists (ignore errors)
+            os.system('mysql -u root%s -e "DROP USER IF EXISTS \'%s\'@\'%%\';" > /dev/null 2>&1' % (rExtra, rUsername))
+            
+            printc("Importing database schema")
+            # Import database schema
+            result = os.system("mysql -u root%s xtream_iptvpro < /home/xtreamcodes/iptv_xtream_codes/database.sql 2>&1" % rExtra)
+            if result != 0:
+                printc("Failed to import database schema!", col.BRIGHT_RED)
+                continue
+            
+            printc("Configuring database settings")
+            # Update settings
+            os.system('mysql -u root%s -e "USE xtream_iptvpro; UPDATE settings SET live_streaming_pass = \'%s\', unique_id = \'%s\', crypt_load_balancing = \'%s\';" > /dev/null 2>&1' % (rExtra, generate(20), generate(10), generate(20)))
+            
+            # Insert server configuration
+            os.system('mysql -u root%s -e "USE xtream_iptvpro; REPLACE INTO streaming_servers (id, server_name, domain_name, server_ip, vpn_ip, ssh_password, ssh_port, diff_time_main, http_broadcast_port, total_clients, system_os, network_interface, latency, status, enable_geoip, geoip_countries, last_check_ago, can_delete, server_hardware, total_services, persistent_connections, rtmp_port, geoip_type, isp_names, isp_type, enable_isp, boost_fpm, http_ports_add, network_guaranteed_speed, https_broadcast_port, https_ports_add, whitelist_ips, watchdog_data, timeshift_only) VALUES (1, \'Main Server\', \'\', \'%s\', \'\', NULL, NULL, 0, 25461, 1000, \'%s\', \'eth0\', 0, 1, 0, \'\', 0, 0, \'{}\', 3, 0, 25462, \'low_priority\', \'\', \'low_priority\', 0, 1, \'\', 1000, 25463, \'\', \'[\"127.0.0.1\",\"\"]\', \'{}\', 0);" > /dev/null 2>&1' % (rExtra, getIP(), getVersion()))
+            
+            # Create admin user
+            os.system('mysql -u root%s -e "USE xtream_iptvpro; REPLACE INTO reg_users (id, username, password, email, member_group_id, verified, status) VALUES (1, \'admin\', \'\$6\$rounds=20000\$xtreamcodes\$XThC5OwfuS0YwS4ahiifzF14vkGbGsFF1w7ETL4sRRC5sOrAWCjWvQJDromZUQoQuwbAXAFdX3h3Cp3vqulpS0\', \'admin@website.com\', 1, 1, 1);" > /dev/null 2>&1'  % rExtra)
+            
+            printc("Creating MySQL user for Xtream Codes")
+            # Create database user
+            result = os.system('mysql -u root%s -e "CREATE USER \'%s\'@\'%%\' IDENTIFIED BY \'%s\'; GRANT ALL PRIVILEGES ON xtream_iptvpro.* TO \'%s\'@\'%%\' WITH GRANT OPTION; GRANT SELECT, LOCK TABLES ON *.* TO \'%s\'@\'%%\';FLUSH PRIVILEGES;" > /dev/null 2>&1' % (rExtra, rUsername, rPassword, rUsername, rUsername))
+            if result != 0:
+                printc("Failed to create database user!", col.BRIGHT_RED)
+                continue
+            
+            # Create dashboard statistics table
+            os.system('mysql -u root%s -e "USE xtream_iptvpro; CREATE TABLE IF NOT EXISTS dashboard_statistics (id int(11) NOT NULL AUTO_INCREMENT, type varchar(16) NOT NULL DEFAULT \'\', time int(16) NOT NULL DEFAULT \'0\', count int(16) NOT NULL DEFAULT \'0\', PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=latin1; INSERT INTO dashboard_statistics (type, time, count) VALUES(\'conns\', UNIX_TIMESTAMP(), 0),(\'users\', UNIX_TIMESTAMP(), 0);" > /dev/null 2>&1' % rExtra)
+            
+            # Test the created user
+            printc("Testing database connection with new user")
+            test_user_result = os.system('mysql -u %s -p%s -e "USE xtream_iptvpro; SELECT COUNT(*) FROM reg_users;" > /dev/null 2>&1' % (rUsername, rPassword))
+            if test_user_result != 0:
+                printc("Failed to connect with new database user!", col.BRIGHT_RED)
+                continue
+            
+            printc("Database configured successfully", col.GREEN)
+            
+            # Cleanup database.sql file
+            try: 
+                os.remove("/home/xtreamcodes/iptv_xtream_codes/database.sql")
+                printc("Cleaned up temporary files")
+            except: 
+                pass
+                
             return True
-        except: printc("Invalid password! Try again", col.BRIGHT_RED)
+            
+        except Exception as e:
+            printc("MySQL configuration failed: %s" % str(e), col.BRIGHT_RED)
+            if attempt < 2:
+                continue
+            else:
+                return False
+    
+    printc("Failed to configure MySQL after 3 attempts!", col.BRIGHT_RED)
     return False
 
 def encrypt(rHost="127.0.0.1", rUsername="user_iptvpro", rPassword="", rDatabase="xtream_iptvpro", rServerID=1, rPort=7999):
